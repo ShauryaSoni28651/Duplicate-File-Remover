@@ -1,0 +1,21 @@
+# Build artifacts
+build/
+*.o
+*.exe
+*.a
+*.so
+*.dll
+
+# IDE stuff
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CMake
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
