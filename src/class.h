@@ -11,7 +11,6 @@ namespace fs = std::filesystem;
 
 class FileMetadata {
 private:
-    bool has_duplicate{};
     long long m_size{};
     fs::path m_parent_path;
     std::string m_file_name;
@@ -22,8 +21,10 @@ public:
     FileMetadata(const fs::path &, std::string_view, std::string_view, long long, bool dup = false);
 
     // more function here, like getters and setters for the private members
-    void processDirectory(const fs::path &, std::unordered_map<std::string, std::vector<FileMetadata>> &);
+    const std::string& calculateHash(const fs::path &);
     void cleanDirectory(const fs::path &, std::unordered_map<std::string, std::vector<FileMetadata>> &);
+    void processDirectory(const fs::path &, std::unordered_map<std::string, std::vector<FileMetadata>> &);
+    
 
     ~FileMetadata();
 };
