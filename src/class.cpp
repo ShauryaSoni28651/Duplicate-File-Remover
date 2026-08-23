@@ -71,37 +71,29 @@ void FileMetadata::cleanDirectory(const fs::path &dir, std::unordered_map<std::s
 
 
 /*
-- Function to calculate hash value of a file, abd stroe it in the member variable m_hash, for later comparisions
+- Function to calculate hash value of a file, and store it in the member variable m_hash, for later comparisions
 - This fucntion uses hashing algorith sha256 to calculate the hash value of the file
 */
-// implemented by Claude
-void FileMetadata::calculateHash(const fs::path &file_path) {
-    std::string hash_value = "";
 
-    // Implementation for calculating hash value
+
+
+// SHA-256 hashing using PicoSHA2
+// https://github.com/okdshin/PicoSHA2
+// Licensed under MIT License
+
+void FileMetadata::calculateHash(const fs::path &file_path) {
     std::ifstream file(file_path, std::ios::binary);
     if (!file) {
         std::cerr << "Error opening file for hashing: " << file_path << std::endl;
         return;
     }
 
-    SHA256_CTX sha256_ctx;
-    SHA256_Init(&sha256_ctx);
-
-    char buffer[8192];
-    while (!file.eof()) {
-        file.read(buffer, sizeof(buffer));
-        // Process the buffer
-        SHA256_Update(&sha256_ctx, buffer, file.gcount());
-    }
-
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-    SHA256_Final(hash, &sha256_ctx);
+    std::vector<unsigned char> hash(picosha2::k_digest_size);
+    picosha2::hash256(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>(), hash.begin(), hash.end());
 
     std::stringstream ss;
-    for (unsigned char byte : hash) {
-        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+    for (auto byte : hash) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << (int)byte;
     }
-
-    m_hash = ss.str(); // store the calculated hash value in the member variable
+    m_hash = ss.str();
 }

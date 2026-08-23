@@ -1,7 +1,7 @@
 #ifndef CLASS_H
 #define CLASS_H
 
-#include <openssl/sha.h>
+#include "picosha2.h"
 #include <array>
 #include <filesystem>
 #include <fstream>
