@@ -29,12 +29,11 @@ void FileMetadata::processDirectory(const fs::path &dir, std::unordered_map<std:
             // call constructor to create a new object of the class FileMetadata, and adds the constructed object to the vector of class objects
             FileMetadata file(entry.path().parent_path(), entry.path().filename().string(), entry.path().extension().string(), fs::file_size(entry.path()));
             // this pushes the file object into the hash map, with the file extension as the key, and the vector of class objects as the value
-            file_info[m_extension].push_back(file);
+            file_info[file.m_extension].push_back(file);
         }
 
-        // here call the funtion which cleans the directory
-        cleanDirectory(dir, file_info);
-        file_info.clear(); // clear the hash map to free up memory and avoid memory leaks
+        cleanDirectory(dir, file_info); // call the cleanDirectory function to check for duplicates and remove them
+        file_info.clear();
     }
 }
 

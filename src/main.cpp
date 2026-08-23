@@ -9,8 +9,6 @@
 namespace fs = std::filesystem;
 
 void printMessage();
-void processDirectory(const fs::path &, std::unordered_map<std::string, std::vector<fs::path>> &);
-void printHashmaps(std::unordered_map<std::string, std::vector<fs::path>> &);
 
 int main(int argc, char *argv[]) {
     // checking if the correct command-line arguments are given or not
@@ -18,28 +16,26 @@ int main(int argc, char *argv[]) {
         printMessage();
         return 1;
     }
+
     fs::path dir_path(argv[1]);
+
     // checking if the directory exists or not
-    if (!fs::exists(dir_path)) {
+    if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {
         std::cerr << "Directory doesn't exist.\n";
         return 1;
     }
-    // ! this is copy pasted form the old file, edit everything(apart form printDirectory) to match the new contents of the file
-    // ? starts here
-    // declaring a hash map to store different things
+
     std::unordered_map<std::string, std::vector<FileMetadata>> file_map;
     std::vector<FileMetadata> duplicate_files;
 
-    // printHashmaps(extension_file_map);
-    // ? ends here
-    
+    FileMetadata file_processor("", "", "", 0);
+    file_processor.processDirectory(dir_path, file_map);
+
+    std::cout << "Duplicate scan complete.\n";
     return 0;
 }
 
 
-// TODO edit this such that it prints the message in a more user-friendly way, and also add more information about the program
-// TODO add more information about the program, like what it does, what it doesn't do, and how to use it
-// TODO add this specific line, if if duplicate files with different names are found, then the program will move all files to another folder named "Naming Conflict"
 void printMessage() {
     using namespace std;
 
@@ -73,17 +69,3 @@ void printMessage() {
     cout << "Please rerun the program with a valid directory path.\n";
 }
 
-// ! this is copy pasted form the old file, edit and replace this with another implementation of the same functions
-// ? starts here
-
-// this is a test function
-void printHashmaps(std::unordered_map<std::string, std::vector<fs::path>> &hashmaps) {
-    for (const auto &[key, value] : hashmaps) {
-        std::cout << key << '\n';
-        for (const auto &i : value) {
-            std::cout << i << '\n';
-        }
-        std::cout << std::endl;
-    }
-}
-// ? ends here
