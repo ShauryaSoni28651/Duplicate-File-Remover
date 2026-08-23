@@ -39,7 +39,43 @@ void FileMetadata::processDirectory(const fs::path &dir, std::unordered_map<std:
     }
 }
 
+/*
+- This function cleans the directory by checking for dupliactes and removing duplicate files
+- It may call other functions to check for duplicates, calculate hash values, and move files to the "duplicates" folder
+*/
+/*
+void FileMetadata::cleanDirectory(const fs::path &dir, std::unordered_map<std::string, std::vector<FileMetadata>> &file_info) {
+    fs::path duplicates_folder = dir / "duplicates";
+    fs::create_directories(duplicates_folder);
 
+    for (auto &[key, value] : file_info) {
+        // no point checking if there is only one file, so skip
+        if (value.size() < 2) continue;
+        // for same extension file, compare via size, if size is same then compare via hash value, if hash value is same then move the file to the "duplicates" folder
+        for (size_t i = 0; i < value.size(); ++i) {
+            for (size_t j = i + 1; j < value.size(); ++j) {
+                if (value[i].m_size == value[j].m_size) {
+                    // calculate hash values and compare
+                    // if hash values are same, then move the file to the "duplicates" folder, and remove the first file from the vector, and set the has_duplicate variable to true
+                    // else do nothing, remove the first file from the vector, and set the has_duplicate variable to false
+                    if (compareHashValues(value[i].m_parent_path / value[i].m_file_name, value[j].m_parent_path / value[j].m_file_name)) {
+                        // move the file to the "duplicates" folder
+                        fs::path destination = duplicates_folder / value[j].m_file_name;
+                        fs::rename(value[j].m_parent_path / value[j].m_file_name, destination);
+
+                        value.erase(value.begin() + j);
+                        value[i].has_duplicate = true;
+                    } else {
+                        value.erase(value.begin() + j);
+                        value[i].has_duplicate = false;
+                    }
+
+                }
+            }
+        }
+    }
+}
+*/
 
 /*
 - Function to calculate hash value of a file, and return true if the hash value is same, else return false
