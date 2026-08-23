@@ -18,20 +18,19 @@ int main(int argc, char *argv[]) {
         printMessage();
         return 1;
     }
-    fs::path dirPath(argv[1]);
+    fs::path dir_path(argv[1]);
     // checking if the directory exists or not
-    if (!fs::exists(dirPath)) {
+    if (!fs::exists(dir_path)) {
         std::cerr << "Directory doesn't exist.\n";
         return 1;
     }
-    
     // ! this is copy pasted form the old file, edit everything(apart form printDirectory) to match the new contents of the file
     // ? starts here
     // declaring a hash map to store different things
-    std::unordered_map<std::string, std::vector<fs::path>> extensionFileMap;
+    std::unordered_map<std::string, std::vector<FileMetadata>> file_map;
+    std::vector<FileMetadata> duplicate_files;
 
-    processDirectory(dirPath, extensionFileMap);
-    printHashmaps(extensionFileMap);
+    // printHashmaps(extension_file_map);
     // ? ends here
     
     return 0;
@@ -76,16 +75,6 @@ void printMessage() {
 
 // ! this is copy pasted form the old file, edit and replace this with another implementation of the same functions
 // ? starts here
-void processDirectory(const fs::path &directory, std::unordered_map<std::string, std::vector<fs::path>> &extensionsMap) {
-    // iterating in the directory
-    for (const auto &entry : fs::directory_iterator(directory)) {
-        // if the path is directory and not a hidden folder, then go inside that directory
-        const bool conditionForHiddenFiles = entry.path().filename().string()[0] == '.';
-        if (fs::is_directory(entry.path()) && !conditionForHiddenFiles) processDirectory(entry.path(), extensionsMap);
-        // if not, then organize the files into different hashmap key, value pair
-        else extensionsMap[entry.path().extension().string()].push_back(entry.path());
-    }
-}
 
 // this is a test function
 void printHashmaps(std::unordered_map<std::string, std::vector<fs::path>> &hashmaps) {

@@ -4,25 +4,28 @@
 #include <filesystem>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <vector>
 
 namespace fs = std::filesystem;
 
-class FileInfo {
+class FileMetadata {
 private:
     bool has_duplicate{};
-    double m_size{};
-    fs::path m_path;
+    long long m_size{};
+    fs::path m_parent_path;
     std::string m_file_name;
     std::string m_extension;
     std::string m_hash;
-    std::vector<fs::path> m_list_of_duplicates{};
 
 public:
-    FileInfo(fs::path &, std::string_view, std::string_view, double, bool dup = false);
+    FileMetadata(const fs::path &, std::string_view, std::string_view, long long, bool dup = false);
 
     // more function here, like getters and setters for the private members
-    ~FileInfo();
+    void processDirectory(const fs::path &, std::unordered_map<std::string, std::vector<FileMetadata>> &);
+    void cleanDirectory(const fs::path &, std::unordered_map<std::string, std::vector<FileMetadata>> &);
+
+    ~FileMetadata();
 };
 
 #endif
