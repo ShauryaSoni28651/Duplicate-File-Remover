@@ -1,5 +1,4 @@
 #include "class.h"
-#include <unordered_map>
 
 FileMetadata::FileMetadata(const fs::path &parent_path, std::string_view name, std::string_view ext, long long size, bool dup) 
     : m_parent_path(parent_path), m_file_name(name), m_extension(ext), m_size(size) {}
@@ -53,10 +52,10 @@ void FileMetadata::cleanDirectory(const fs::path &dir, std::unordered_map<std::s
         if (value.size() < 2) continue;
         // for same extension file, compare via size, if size is same then compare via hash value, if hash value is same then move the file to the "duplicates" folder
         // calculating hash and storing it in member variable, for later comparisions
-        value[0].m_hash = calculateHash(value[0].m_parent_path / value[0].m_file_name);
+        value[0].calculateHash(value[0].m_parent_path / value[0].m_file_name);
 
         for (int i = 1; i < value.size(); ++i) {
-            value[i].m_hash = calculateHash(value[i].m_parent_path / value[i].m_file_name);
+            value[i].calculateHash(value[i].m_parent_path / value[i].m_file_name);
         
             if (value[0].m_size == value[i].m_size && value[0].m_hash == value[i].m_hash) {
                 // move the file to the "duplicates" folder
@@ -72,12 +71,37 @@ void FileMetadata::cleanDirectory(const fs::path &dir, std::unordered_map<std::s
 
 
 /*
-- Function to calculate hash value of a file
+- Function to calculate hash value of a file, abd stroe it in the member variable m_hash, for later comparisions
+- This fucntion uses hashing algorith sha256 to calculate the hash value of the file
 */
-const std::string& FileMetadata::calculateHash(const fs::path &file_path) {
+// implemented by Claude
+void FileMetadata::calculateHash(const fs::path &file_path) {
     std::string hash_value = "";
 
     // Implementation for calculating hash value
+    std::ifstream file(file_path, std::ios::binary);
+    if (!file) {
+        std::cerr << "Error opening file for hashing: " << file_path << std::endl;
+        return;
+    }
 
-    return hash_value; // placeholder
+    SHA256_CTX sha256_ctx;
+    SHA256_Init(&sha256_ctx);
+
+    char buffer[8192];
+    while (!file.eof()) {
+        file.read(buffer, sizeof(buffer));
+        // Process the buffer
+        SHA256_Update(&sha256_ctx, buffer, file.gcount());
+    }
+
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_Final(hash, &sha256_ctx);
+
+    std::stringstream ss;
+    for (unsigned char byte : hash) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+    }
+
+    m_hash = ss.str(); // store the calculated hash value in the member variable
 }
