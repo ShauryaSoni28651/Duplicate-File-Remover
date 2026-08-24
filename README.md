@@ -25,7 +25,7 @@ A C++ utility to find and remove duplicate files from a directory.
 
 3. **Clone and Build**
 ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/ShauryaSoni28651/Duplicate-File-Remover
    cd Duplicate-File-Remover
    mkdir build
    cd build
@@ -35,13 +35,13 @@ A C++ utility to find and remove duplicate files from a directory.
 
 4. **Run**
 ```bash
-   ./DuplicateFileRemover.exe
+   ./DuplicateFileRemover.exe <directory to clean>
 ```
 
 ### Linux/Mac
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/ShauryaSoni28651/Duplicate-File-Remover
 cd Duplicate-File-Remover
 mkdir build
 cd build
@@ -67,12 +67,15 @@ make
   - License: MIT
 
 ## Project Structure
+```
 Duplicate-File-Remover/
 ├── src/
 │ ├── main.cpp
 │ ├── class.h
 │ ├── class.cpp
 │ └── picosha2.h
+├── .gitignore
 ├── CMakeLists.txt
 └── README.md
+```
 
