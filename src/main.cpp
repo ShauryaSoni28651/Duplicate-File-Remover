@@ -1,3 +1,11 @@
+// NOTES
+/*
+- There is bug, currently where all the duplicate files, are moved deep inside the created directory folder created inside innermost folder in the directory tree
+- Recheck the function processDirectory and cleanDirectory
+- See if the path is being passed correctly to the function, and if the path is being used correctly in the function
+*/
+
+
 #include "class.h"
 #include <filesystem>
 #include <iostream>
@@ -8,7 +16,7 @@
 
 namespace fs = std::filesystem;
 
-void printMessage();
+static void printMessage();
 
 int main(int argc, char *argv[]) {
     // checking if the correct command-line arguments are given or not
@@ -17,7 +25,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    fs::path dir_path(argv[1]);
+    const fs::path dir_path(argv[1]);
 
     // checking if the directory exists or not
     if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {
@@ -63,8 +71,7 @@ void printMessage() {
 
     cout << "Important notes:\n";
     cout << "---------------\n";
-    cout << "The program moves all duplicate files except one into a folder named \"duplicateFilesMoved\".\n";
-    cout << "If duplicate files with different names are found, the program will move all files to another folder named \"Naming Conflict\".\n\n";
+    cout << "The program moves all duplicate files except one into a folder named \"duplicates\".\n\n";
 
     cout << "Please rerun the program with a valid directory path.\n";
 }
